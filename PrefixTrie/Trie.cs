@@ -56,8 +56,8 @@ namespace PrefixTrie
             _endChar = endChar;
         }
 
-        public delegate void Teszt(string value);
-        public void NewWord(string[] newWords, Teszt _method = null)
+        public delegate void NewWordHandler(string value);
+        public void NewWord(string[] newWords, NewWordHandler _method = null)
         {
             for (int i = 0; i < newWords.Length; i++)
             {
@@ -76,7 +76,7 @@ namespace PrefixTrie
         /// A megadott stringet feldarabolja a fa végkaraktereknél, és azokat hozzáadja a fához. Ha nincs benne az a karakter, akkor egy szónak veszi a stringet.
         /// </summary>
         /// <param name="newWord"></param>
-        public void NewWord(string newWord, Teszt _method = null) => NewWord(newWord.Split(_endChar), _method);
+        public void NewWord(string newWord, NewWordHandler _method = null) => NewWord(newWord.Split(_endChar), _method);
 
         private void NewWordRek(Node node, string newWord, string createdWord)
         {
