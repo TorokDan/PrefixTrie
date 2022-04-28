@@ -62,26 +62,22 @@ namespace PrefixTrie
         
         private void NewWordRek(Node node, string newWord, string createdWord)
         {
-            if (newWord.Length == 1 && newWord == _endChar.ToString())
+            if (newWord == string.Empty)
             {
-                if (!Trie.ValueIsExistsUnder(node, _endChar.ToString())) // Végigment a rekurzió, és nem volt még ilyen szó.
+                if (!Trie.ValueIsExistsUnder(node, createdWord+_endChar.ToString())) // Végigment a rekurzió, és nem volt még ilyen szó.
                 {
-                    Node endNode = new Node(createdWord + newWord);
+                    Node endNode = new Node(createdWord + _endChar);
                     node.NewChild(endNode);
                 }
-                else // TODO Ide valamiért nem jut el. Végigment a rekurzió, és volt már ilyen szó
-                {
+                else //  Végigment a rekurzió, és volt már ilyen szó
                     throw new TrieWordAlredyInTheTrieException();
-                }
             }
-            else if (newWord != string.Empty) // TODO itt szeirntem nem kéne vizsgálat, elég lenne egy else ág, de azért benne hagyom egyenlőre
+            else
             {
                 createdWord += newWord[0];
                 newWord = newWord.Remove(0, 1);
                 if (ValueIsExistsUnder(node, createdWord ))
-                {
                     NewWordRek(NodeIsExistsUnder(node, createdWord), newWord, createdWord);
-                }
                 else
                 {
                     Node newNode = new Node(createdWord);
