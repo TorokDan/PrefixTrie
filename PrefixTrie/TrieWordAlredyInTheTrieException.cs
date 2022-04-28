@@ -4,8 +4,8 @@ namespace PrefixTrie
 {
     public class TrieWordAlredyInTheTrieException : Exception
     {
-        public TrieWordAlredyInTheTrieException()
-            : base("Word alredy in the Trie")
+        public TrieWordAlredyInTheTrieException(string word)
+            : base($"\"{word}\" is alredy in the Trie")
         {
 
         }

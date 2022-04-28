@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,11 +56,28 @@ namespace PrefixTrie
             _endChar = endChar;
         }
 
-        public void NewWord(string newWord)
+        public delegate void Teszt(string value);
+        public void NewWord(string[] newWords, Teszt _method = null)
         {
-            NewWordRek(_root, newWord, string.Empty);
+            for (int i = 0; i < newWords.Length; i++)
+            {
+                try
+                {
+                    NewWordRek(_root, newWords[i], string.Empty);
+                    _method?.Invoke(newWords[i]);
+                }
+                catch (TrieWordAlredyInTheTrieException e) // TODO nem tudom h itt hogy itt hoyg kéne a már létező szavakat lekezelni, egyenlőre így lesez...
+                {
+                    _method?.Invoke(e.Message);
+                }
+            }
         }
-        
+        /// <summary>
+        /// A megadott stringet feldarabolja a fa végkaraktereknél, és azokat hozzáadja a fához. Ha nincs benne az a karakter, akkor egy szónak veszi a stringet.
+        /// </summary>
+        /// <param name="newWord"></param>
+        public void NewWord(string newWord, Teszt _method = null) => NewWord(newWord.Split(_endChar), _method);
+
         private void NewWordRek(Node node, string newWord, string createdWord)
         {
             if (newWord == string.Empty)
@@ -70,7 +88,7 @@ namespace PrefixTrie
                     node.NewChild(endNode);
                 }
                 else //  Végigment a rekurzió, és volt már ilyen szó
-                    throw new TrieWordAlredyInTheTrieException();
+                    throw new TrieWordAlredyInTheTrieException(createdWord);
             }
             else
             {
