@@ -63,8 +63,8 @@ namespace PrefixTrie
             {
                 try
                 {
-                    NewWordRek(_root, newWords[i], string.Empty);
-                    _method?.Invoke(newWords[i]);
+                    NewWordRek(_root, newWords[i].ToLower(), string.Empty);
+                    _method?.Invoke(newWords[i].ToLower());
                 }
                 catch (TrieWordAlredyInTheTrieException e) // TODO nem tudom h itt hogy itt hoyg kéne a már létező szavakat lekezelni, egyenlőre így lesez...
                 {
@@ -103,6 +103,39 @@ namespace PrefixTrie
                     NewWordRek(newNode, newWord, createdWord);
                 }
             }
+        }
+
+
+        public delegate void TraverseHandler(string value);
+        public void Traverse(TraverseHandler _method)
+        {
+            TraverseRek(_root, _method);
+        }
+
+        private void TraverseRek(Node node, TraverseHandler _method)
+        {
+            if (node.Value.Length != 0 && node.Value[^1] == _endChar)
+                _method?.Invoke(node.Value.Remove(node.Value.Length-1, 1));
+            foreach (Edge edge in node.Edges)
+            {
+                TraverseRek(edge.To, _method);
+            }
+        }
+
+        public bool Search(string valueToSearch)
+        {
+            bool found = false;
+            SearchRek(_root, valueToSearch, ref found);
+            return found;
+        }
+
+        private void SearchRek(Node node, string valueToSearch, ref bool found)
+        {
+            if (node.Value == valueToSearch)
+                found = true;
+            else
+                foreach (Edge edge in node.Edges)
+                    SearchRek(edge.To, valueToSearch, ref found);
         }
 
         private static bool ValueIsExistsUnder(Node head, string searchValue)  // TODO ezt a két metódust lehet át kéne gondolni

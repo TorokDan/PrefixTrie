@@ -14,6 +14,8 @@ namespace PrefixTrie
             OwnListElement<T> current = _head;
             OwnListElement<T> before = null;
             
+            
+            
             while (current != null)
             {
                 before = current;

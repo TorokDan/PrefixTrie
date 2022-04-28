@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Channels;
 
 namespace PrefixTrie
 {
@@ -7,7 +8,11 @@ namespace PrefixTrie
         static void Main(string[] args)
         {
             Trie elsoTeszt = new Trie('$');
-            elsoTeszt.NewWord("alma$korte$cekla$alma$haziko$haz", Console.WriteLine)
+            elsoTeszt.NewWord("Bela$alma$korte$cekla$alma$haziko$haz");
+            elsoTeszt.Traverse(Console.WriteLine);
+            Console.WriteLine(elsoTeszt.Search("alma"));
+            Console.WriteLine(elsoTeszt.Search("asdfasdf"));
+            
             ;
         }
     }
