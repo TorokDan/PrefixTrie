@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +14,7 @@ namespace PrefixTrie
             private Node _from;
             private Node _to;
 
+            public Node From => _from;
             public Node To => _to;
             public Edge(Node from, Node to)
             {
@@ -45,9 +45,27 @@ namespace PrefixTrie
                 if (!contains)
                     _edges.Add(new Edge(this, newNode));
             }
+
+            public void RemoveChild(Node nodeToRemove)
+            {
+                _edges.Remove(this.SearchToNode(nodeToRemove));
+            }
+
+            public Edge SearchToNode(Node nodeToSearch)
+            {
+                Edge edge = null;
+                foreach (Edge edgeItem in _edges)
+                {
+                    if (edgeItem.To == nodeToSearch)
+                        edge = edgeItem;
+                }
+
+                return edge == null ? throw new TrieEdgeNotInEdgesException() : edge;
+            }
+            public bool Equals(Node node) => node._value == this._value;
         }
 
-        private Node _root;
+        private  Node _root;  // Lehet constantnak kéne csinálni
         private char _endChar;
 
         public Trie(char endChar)
@@ -105,6 +123,30 @@ namespace PrefixTrie
             }
         }
 
+        public void DeleteWord(string wordToDelete)
+        {
+            if (!this.Search(wordToDelete))
+                throw new TrieWordNotInTheTrieException(wordToDelete);
+            DeleteWordRek(_root, null, wordToDelete+_endChar, string.Empty);
+        }
+
+        private void DeleteWordRek(Node nodeActual, Edge edgeToNode, string wordToDelete, string createdWord)
+        {
+            if (wordToDelete.Length != 0)
+            {
+                createdWord += wordToDelete[0];
+                wordToDelete = wordToDelete.Remove(0, 1);
+            }
+            foreach (Edge edge in nodeActual.Edges)
+            {
+                if (edge.To.Value == createdWord && wordToDelete.Length != 0)
+                    DeleteWordRek(edge.To, edge, wordToDelete, createdWord);
+                // if (nodeActual.Edges.Count() == 0)
+                //     edgeToNode.From.RemoveChild(nodeActual);
+            }
+            if (nodeActual.Value == createdWord && nodeActual.Value[^1] == _endChar)
+                edgeToNode.From.RemoveChild(nodeActual);
+        }
 
         public delegate void TraverseHandler(string value);
         public void Traverse(TraverseHandler _method)

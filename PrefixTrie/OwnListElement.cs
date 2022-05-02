@@ -20,6 +20,5 @@ namespace PrefixTrie
         {
             _value = value;
         }
-
     }
 }

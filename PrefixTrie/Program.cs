@@ -12,7 +12,8 @@ namespace PrefixTrie
             elsoTeszt.Traverse(Console.WriteLine);
             Console.WriteLine(elsoTeszt.Search("alma"));
             Console.WriteLine(elsoTeszt.Search("asdfasdf"));
-            
+            elsoTeszt.DeleteWord("alma");
+            elsoTeszt.Traverse(Console.WriteLine)
             ;
         }
     }
